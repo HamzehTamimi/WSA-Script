@@ -37,7 +37,7 @@ reqheaders = {
     "Accept": "application/vnd.github.v3+json",
     "Authorization" : authorization,
 }
-#Catagory ID
+#Category ID
 cat_id = '858014f3-3934-4abe-8078-4aa193e74ca8'
 
 release_type = "WIF"
@@ -51,7 +51,7 @@ git = (
     "git checkout -f update || git switch --discard-changes --orphan update"
 )
 
-def MagiskandGappsChecker(type):
+def Magisk_Ksu_Gapps_Checker(type):
     global new_version_found
     # Get current version
     currentver = requests.get(f"https://raw.githubusercontent.com/YT-Advanced/WSA-Script/update/" + type + ".appversion").text.replace('\n', '')
@@ -70,6 +70,9 @@ def MagiskandGappsChecker(type):
     elif (type == "gapps"):
         latestver = json.loads(requests.get(f"https://api.github.com/repos/YT-Advanced/MindTheGappsBuilder/releases/latest", headers=reqheaders).content)['name']
         msg="Update MindTheGapps Version from `v" + currentver + "` to `v" + latestver + "`"
+    elif (type == "kernelsu"):
+        latestver = json.loads(requests.get(f"https://api.github.com/repos/tiann/KernelSU/releases/latest", headers=reqheaders).content)['name']
+        msg="Update KernelSU Version from `" + currentver + "` to `" + latestver + "`"
 
     # Check if version is the same or not
     if (currentver != latestver):
@@ -174,7 +177,7 @@ def WSAChecker(user, release_type):
 # Get user_code (Thanks to @bubbles-wow because of his repository)
 users = {""}
 try:
-    response = requests.get("https://api.github.com/repos/bubbles-wow/MS-Account-Token/contents/token.cfg")
+    response = requests.get("https://api.github.com/repos/bubbles-wow/WSAUpdateChecker/contents/token.conf")
     if response.status_code == 200:
         content = response.json()["content"]
         content = content.encode("utf-8")
@@ -200,10 +203,13 @@ for user in users:
         if WSAChecker(user, "retail") == 1:
             break
         print("Checking Magisk version...\n")
-        if MagiskandGappsChecker("magisk") == 1:
+        if Magisk_Ksu_Gapps_Checker("magisk") == 1:
+            break
+        print("Checking KernelSU version...\n")
+        if Magisk_Ksu_Gapps_Checker("kernelsu") == 1:
             break
         print("Checking MindTheGapps version...\n")
-        if MagiskandGappsChecker("gapps") == 1:
+        if Magisk_Ksu_Gapps_Checker("gapps") == 1:
             break
     else:
         print("Checking WSA Insider version...\n")
